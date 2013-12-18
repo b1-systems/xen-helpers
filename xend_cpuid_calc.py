@@ -395,11 +395,40 @@ def genstr(mask):
 
 def output():
     buf = StringIO.StringIO()
-    buf.write("cpuid = [ '1:edx=" + genstr(OUTPUT[0]) + ",ecx=" + genstr(OUTPUT[4]) + "',\n"
-              #"          '2:',\n" 
-              " '0x80000001:edx=" + genstr(OUTPUT[1]) + ",ecx=" + genstr(OUTPUT[6]) + "',\n"
-              "]"
-              )
+    """
+    (cpuid
+     ( (1
+        (
+            (eax xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+            (edx xx0xxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+            (ebx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+            (ecx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx0)
+            )
+        )
+        ) )
+    """
+    #buf.write("cpuid = [ '1:edx=" + genstr(OUTPUT[0]) + ",ecx=" + genstr(OUTPUT[4]) + "',\n"
+    #          #"          '2:',\n" 
+    #          " '0x80000001:edx=" + genstr(OUTPUT[1]) + ",ecx=" + genstr(OUTPUT[6]) + "',\n"
+    #          "]"
+    #          )
+    buf.write("""
+(cpuid
+    ( (1
+        (
+        (edx """ + genstr(OUTPUT[0]) + """)
+        (ecx """ + genstr(OUTPUT[4]) + """)
+        )
+    )
+    (0x80000001
+        (
+        (edx """ + genstr(OUTPUT[1]) + """)
+        (ecx """ + genstr(OUTPUT[6]) + """)
+        )
+    )
+  )
+)
+               """)
     
     print buf.getvalue()
 
